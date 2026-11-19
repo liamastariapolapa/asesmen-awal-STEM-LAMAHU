@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LAMAHU Pre-Assessment</title>
+<style>
+:root{--bg:#faf6ec;--card:#fff;--ink:#2a2418;--mute:#6b624f;--pri:#1f6f4a;--pri-ink:#fff;--gold:#c9962b;--line:#e4dcc6;--soft:#f3ecd7;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#16130c;--card:#221e14;--ink:#f2ead6;--mute:#b3a98d;--pri:#4fb583;--pri-ink:#0d1f16;--gold:#e0b04a;--line:#3a3322;--soft:#2c2718}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#16130c;--card:#221e14;--ink:#f2ead6;--mute:#b3a98d;--pri:#4fb583;--pri-ink:#0d1f16;--gold:#e0b04a;--line:#3a3322;--soft:#2c2718}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:720px;margin:0 auto;padding:20px 16px 48px}
+header{text-align:center;padding:12px 0 8px}
+.badge{display:inline-block;background:var(--gold);color:#2a2418;font-weight:700;font-size:12px;letter-spacing:.08em;padding:4px 12px;border-radius:99px}
+h1{margin:10px 0 2px;font-size:28px;color:var(--pri);letter-spacing:.02em}
+.sub{color:var(--mute);font-size:14px;margin:0}
+.bar{height:8px;background:var(--soft);border-radius:99px;margin:18px 0;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--pri);width:0;transition:width .3s}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:14px}
+h2{margin:0 0 4px;font-size:20px}
+.hint{color:var(--mute);font-size:14px;margin:0 0 14px}
+.q{margin:18px 0 0}
+.q label{display:block;font-weight:600;margin-bottom:6px}
+.q .n{display:inline-flex;width:26px;height:26px;border-radius:50%;background:var(--pri);color:var(--pri-ink);align-items:center;justify-content:center;font-size:13px;margin-right:8px}
+input[type=text],textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px}
+textarea{min-height:76px;resize:vertical}
+input:focus,textarea:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+.row{display:flex;gap:10px;margin-top:20px}
+button{font:inherit;font-weight:600;border:0;border-radius:12px;padding:12px 20px;cursor:pointer}
+.p{background:var(--pri);color:var(--pri-ink);flex:1}
+.s{background:var(--soft);color:var(--ink)}
+.tblw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:460px}
+th,td{padding:10px 6px;text-align:center;border-bottom:1px solid var(--line);font-size:14px}
+th:first-child,td:first-child{text-align:left;width:52%}
+td input{width:22px;height:22px;accent-color:var(--pri)}
+.legend{font-size:13px;color:var(--mute);margin-bottom:10px}
+pre{white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;max-height:380px;overflow:auto}
+.done{text-align:center;font-size:44px}
+.err{color:#c0392b;font-size:13px;margin-top:6px;display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<span class="badge">STEM · PRE-ASSESSMENT</span>
+<h1>LAMAHU</h1>
+<p class="sub">Lestarikan Budaya melalui Ilmu Pengetahuan dan Teknologi<br>English &amp; Seni Budaya (Seni Rupa) · Fase F · Kelas XI</p>
+</header>
+<div class="bar"><i id="bar"></i></div>
+<main id="app"></main>
+</div>
+<script>
+var A=[
+"Sebutkan satu nama pakaian adat Gorontalo yang kamu ketahui.",
+"Sebutkan satu tarian tradisional Gorontalo dan kapan biasanya ditampilkan.",
+"Sebutkan satu makanan khas Gorontalo dan bahan utamanya.",
+"Apa nama rumah adat Gorontalo yang kamu kenal? Sebutkan satu cirinya.",
+"Siapa tokoh adat atau tokoh budaya Gorontalo yang pernah kamu dengar? Apa perannya?"];
+var B=[
+"What is the purpose of a descriptive text?",
+"Mention the two main parts of a descriptive text.",
+"Complete: The Gorontalo traditional dance ______ (be) very beautiful. (simple present)",
+"Write two adjectives to describe a traditional food you know.",
+"Write one sentence in English to describe something that is part of Gorontalo culture."];
+var S=[
+"Saya mampu berbicara bahasa Gorontalo",
+"Saya menggunakan bahasa Gorontalo di rumah",
+"Saya pernah merekam atau menyunting video",
+"Saya pernah menggunakan atau memindai QR code",
+"Saya senang menggambar atau melukis",
+"Saya berani berbicara bahasa Inggris di depan kelas"];
+var st={step:0,name:"",cls:"",a:["","","","",""],b:["","","","",""],s:[0,0,0,0,0,0]};
+var app=document.getElementById("app"),bar=document.getElementById("bar");
+try{var d=localStorage.getItem("lamahu-pre");if(d){var o=JSON.parse(d);if(o&&o.a&&o.b&&o.s){st=o;if(st.step>3)st.step=3}}}catch(e){}
+function save(){try{localStorage.setItem("lamahu-pre",JSON.stringify(st))}catch(e){}}
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function go(n){st.step=n;save();render();window.scrollTo(0,0)}
+function bind(arr,i,v){st[arr][i]=v;save()}
+function qs(list,arr,shortIdx){
+ return list.map(function(q,i){
+  var f=(i===shortIdx)?'<input type="text" value="'+esc(st[arr][i])+'" oninput="bind(\''+arr+'\','+i+',this.value)" placeholder="Type your answer">'
+  :'<textarea oninput="bind(\''+arr+'\','+i+',this.value)" placeholder="'+(arr==="a"?"Tulis jawabanmu di sini":"Write your answer here")+'">'+esc(st[arr][i])+'</textarea>';
+  return '<div class="q"><label><span class="n">'+(i+1)+'</span>'+esc(q)+'</label>'+f+'</div>'}).join("");
+}
+function render(){
+ bar.style.width=(st.step*25)+"%";
+ var h="";
+ if(st.step===0){
+  h='<div class="card"><h2>Hello! Welcome.</h2><p class="hint">This is a pre-assessment. It is not a test with a score. Answer with your own ideas.</p>'+
+  '<div class="q"><label>Your name</label><input type="text" id="nm" value="'+esc(st.name)+'" placeholder="Nama lengkap"></div>'+
+  '<div class="q"><label>Your class</label><input type="text" id="cl" value="'+esc(st.cls)+'" placeholder="Contoh: XI-1"></div>'+
+  '<div class="err" id="er">Please write your name.</div>'+
+  '<div class="row"><button class="p" onclick="start()">Start</button></div></div>'+
+  '<div class="card"><p class="hint" style="margin:0"><b>3 parts:</b> A – Gorontalo Culture (5) · B – Descriptive Text (5) · C – Survey (6)</p></div>';
+ }else if(st.step===1){
+  h='<div class="card"><h2>Part A – Pengetahuan Budaya Gorontalo</h2><p class="hint">Jawab dalam bahasa Indonesia. Tulis yang kamu tahu.</p>'+qs(A,"a",-1)+nav(0,2)+'</div>';
+ }else if(st.step===2){
+  h='<div class="card"><h2>Part B – Descriptive Text</h2><p class="hint">Answer in English. Simple words are OK.</p>'+qs(B,"b",2)+nav(1,3)+'</div>';
+ }else if(st.step===3){
+  var rows=S.map(function(t,i){
+   var c="";for(var k=1;k<=4;k++)c+='<td><input type="radio" name="s'+i+'" '+(st.s[i]===k?"checked":"")+' onchange="bind(\'s\','+i+','+k+')"></td>';
+   return '<tr><td>'+esc(t)+'</td>'+c+'</tr>'}).join("");
+  h='<div class="card"><h2>Part C – Survey</h2><p class="hint">Choose one number for each sentence.</p><p class="legend">1 = Not at all · 2 = A little · 3 = Quite · 4 = Very much</p>'+
+  '<div class="tblw"><table><tr><th>Pernyataan</th><th>1</th><th>2</th><th>3</th><th>4</th></tr>'+rows+'</table></div>'+nav(2,4,"Finish")+'</div>';
+ }else{
+  var r=report();
+  h='<div class="card"><div class="done">🎉</div><h2 style="text-align:center">Thank you, '+esc(st.name||"student")+'!</h2>'+
+  '<p class="hint" style="text-align:center">You finished the pre-assessment. Copy your answers and send them to your teacher.</p>'+
+  '<pre id="rp">'+esc(r)+'</pre>'+
+  '<div class="row"><button class="s" onclick="go(1)">Edit</button><button class="p" id="cp" onclick="cpy()">Copy answers</button></div>'+
+  '<div class="row"><button class="s" id="ag" style="flex:1" onclick="again()">Start again</button></div></div>';
+ }
+ app.innerHTML=h;
+}
+function nav(b,n,l){return '<div class="row"><button class="s" onclick="go('+b+')">Back</button><button class="p" onclick="go('+n+')">'+(l||"Next")+'</button></div>'}
+function start(){
+ st.name=document.getElementById("nm").value.trim();st.cls=document.getElementById("cl").value.trim();
+ if(!st.name){document.getElementById("er").style.display="block";return}
+ go(1)}
+function report(){
+ var t="LAMAHU – PRE-ASSESSMENT\nName: "+st.name+"\nClass: "+st.cls+"\n\nPART A – Budaya Gorontalo\n";
+ A.forEach(function(q,i){t+=(i+1)+". "+q+"\n   → "+(st.a[i]||"-")+"\n"});
+ t+="\nPART B – Descriptive Text\n";
+ B.forEach(function(q,i){t+=(i+1)+". "+q+"\n   → "+(st.b[i]||"-")+"\n"});
+ t+="\nPART C – Survey (1–4)\n";
+ S.forEach(function(q,i){t+=(i+1)+". "+q+": "+(st.s[i]||"-")+"\n"});
+ return t}
+function cpy(){
+ var t=report(),b=document.getElementById("cp");
+ function ok(){b.textContent="Copied ✓"}
+ function fb(){var x=document.createElement("textarea");x.value=t;document.body.appendChild(x);x.select();try{document.execCommand("copy");ok()}catch(e){b.textContent="Select text and copy"}document.body.removeChild(x)}
+ try{navigator.clipboard.writeText(t).then(ok,fb)}catch(e){fb()}}
+var ag=false;
+function again(){
+ var b=document.getElementById("ag");
+ if(!ag){ag=true;b.textContent="Tap again to delete all answers";b.style.background="#c0392b";b.style.color="#fff";setTimeout(function(){ag=false;var x=document.getElementById("ag");if(x){x.textContent="Start again";x.style.background="";x.style.color=""}},4000);return}
+ ag=false;
+ st={step:0,name:"",cls:"",a:["","","","",""],b:["","","","",""],s:[0,0,0,0,0,0]};
+ save();render();window.scrollTo(0,0)}
+render();
+</script>
+</body>
+</html>
